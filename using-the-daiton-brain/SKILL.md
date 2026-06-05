@@ -70,10 +70,23 @@ Use `upsert_entity` to create or update an **entity** (the node): a new person, 
 upsert_entity(name="Acme Corp", type="Organization", attributes={"domain": "acme.com"})
 ```
 
+### `register_source` — mint a source so a fact can cite it
+
+A fact needs a `source_object_id`, and `register_source` is how you create one. Tell it *where the claim came from* and it returns the id to hand to `assert_fact`:
+
+```text
+register_source(connector="web", uri="https://example.com/q3-memo", title="Q3 board memo")
+→ { "source_object_id": "src_…" }
+```
+
+**Register a source once, cite it many times.** One artifact (a transcript, a doc, a page) usually backs *several* facts — register it a single time and reuse the returned `source_object_id` across every `assert_fact` you derive from it. Don't re-register the same artifact per fact; that bloats provenance and breaks the "one source → many facts" picture that makes a tiny cited fact traceable back to its big original.
+
+`register_source` is only honest if the source is real: it records what you pass it, so the `uri`/`title`/`content` must describe the genuine artifact that contains the claim — never a placeholder minted just to satisfy `assert_fact`.
+
 ### `assert_fact` — the heavy path (REAL provenance REQUIRED)
 
 Use `assert_fact` to record a **claim** about the world: a status, a relationship, a decision, a value. A fact is only worth trusting because of where it came from, so `assert_fact` **requires**:
-- `source_object_id` — a pointer to the **genuine source** the claim came from (the meeting/transcript/message/document object in Daiton that says it). 
+- `source_object_id` — the id from `register_source` (or an existing source), pointing at the **genuine artifact** the claim came from. If you call `assert_fact` without one, it will tell you to `register_source` first.
 - `asserter_entity_id` — **who** is making the assertion (the agent or person on whose authority this goes in).
 
 **The provenance rule — non-negotiable:**
@@ -82,7 +95,7 @@ Use `assert_fact` to record a **claim** about the world: a status, a relationshi
 
 A made-up source is worse than no fact — it poisons the brain for every agent and human downstream, and it's the one thing Daiton exists to prevent. If you *believe* something but can't point to where it came from, you have two honest options:
 - **Don't assert it.** Leave it out, or surface it to the user as an unverified observation.
-- **Create the source first.** If the claim genuinely originates from a real artifact you have (a transcript, an email, a doc), ingest/register that artifact so it has a `source_object_id`, *then* assert against it. The source must actually exist and actually contain the claim.
+- **Register the source first.** If the claim genuinely originates from a real artifact (a transcript, an email, a doc, a web page), call `register_source` to mint its `source_object_id`, *then* `assert_fact` against it. The artifact must actually exist and actually contain the claim.
 
 Red flags that mean STOP:
 - "I'll just put the conversation id / a placeholder as the source." → No. The source must be the artifact that *contains the claim*.
@@ -138,6 +151,7 @@ When you list several facts or entities, put the id pill next to **each** one. T
 | Facts that mention the entity | `query_facts_about` |
 | State as of a past date | `query_facts(…, as_of=…)` |
 | Create/update an entity (no source) | `upsert_entity` |
+| Mint a source for a fact to cite | `register_source` |
 | Record a claim (**real source required**) | `assert_fact` |
 | Fuse same-layer dupes / undo | `merge_entities` / `unmerge_entities` |
 | Same thing across layers / undo | `link_entities` / `unlink_entities` |
@@ -147,7 +161,7 @@ When you list several facts or entities, put the id pill next to **each** one. T
 ## Common mistakes
 
 - **Passing a name where an id is required.** Resolve with `search_entities` / `find_entity_by_alias` first.
-- **Asserting a fact with a fabricated or placeholder source.** Forbidden — don't assert it, or create the real source first.
+- **Asserting a fact with a fabricated or placeholder source.** Forbidden — don't assert it, or `register_source` the real artifact first.
 - **Using `assert_fact` to create an entity, or `upsert_entity` to record a claim.** Entities (nodes) vs facts (claims) are different paths.
 - **Merging across layers.** Cross-source "same person" is `link_entities` (keeps per-source nodes), not `merge_entities`.
 - **Dropping IDs into prose.** Always surface them as labeled pills so the user can copy and act.
