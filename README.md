@@ -15,7 +15,7 @@ Most AI agents keep a private, per-session scratchpad that no other agent or tea
 ```
 agent-skills/
 ├── README.md                         ← you are here
-├── LICENSE                           ← MIT (placeholder)
+├── LICENSE                           ← MIT
 ├── CONTRIBUTING.md
 ├── using-the-daiton-brain/
 │   └── SKILL.md                      ← THE core, reusable playbook (~90% of the value)
@@ -46,14 +46,8 @@ New platform? If it speaks MCP, you usually need only (1) the server URL `https:
 ## Get this repo
 
 ```bash
-git clone https://github.com/daiton-ai/agent-skills.git
+git clone https://github.com/Daiton-ai/agent-skills.git
 ```
-
-> The repo slug `daiton-ai/agent-skills` is a **placeholder** — if it's renamed before/after publishing, it's a single find/replace across this repo.
-
-## The #1 discovery move: register in the MCP Registry
-
-The single highest-leverage distribution step is **listing the Daiton MCP server in the public [MCP Registry](https://github.com/modelcontextprotocol/registry)** (the open, community catalog of MCP servers). Once Daiton is in the registry, MCP-native clients and "add a connector" UIs can **discover and install it without anyone copy-pasting a URL** — it becomes a search result instead of a private link. Registering there is how "be the Daiton skill on every platform" turns from a per-user manual setup into ambient, pull-based discovery. Do this first; the per-platform installs above are the fallback for hosts that don't yet pull from the registry.
 
 ## Auth, in one line
 
@@ -62,4 +56,4 @@ The single highest-leverage distribution step is **listing the Daiton MCP server
 
 ## License
 
-MIT — see [LICENSE](LICENSE). (Placeholder; confirm before publishing.)
+MIT — see [LICENSE](LICENSE).

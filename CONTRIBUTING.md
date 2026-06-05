@@ -25,4 +25,4 @@ The core skill follows the Agent Skills `SKILL.md` convention: YAML frontmatter 
 
 - Markdown, wrapped sensibly, fenced code blocks for every config snippet.
 - Don't commit real `dai_` tokens or secrets. Use placeholders (`dai_xxxx`) and runtime-prompt patterns.
-- Keep it find/replace-able: the repo name `daiton-ai/agent-skills` is a placeholder and may be renamed.
+- Reference the repo as `Daiton-ai/agent-skills` consistently, so a future rename stays a clean find/replace.
