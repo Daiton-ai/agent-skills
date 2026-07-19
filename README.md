@@ -54,6 +54,10 @@ git clone https://github.com/Daiton-ai/agent-skills.git
 - **OAuth / DCR** — for clients that add MCP servers by URL and log the user in (Claude.ai, ChatGPT, Manus). No token to paste.
 - **Opaque `dai_` bearer token** — for clients that take a static `Authorization` header (Claude Code, Cursor, Copilot, scripts). Get it from **Daiton → Settings → Agent tokens**; treat it like a password; use a distinct token per agent so writes are attributed correctly.
 
+## Dogfood
+
+GLM UI dogfood 2026-07-16
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
