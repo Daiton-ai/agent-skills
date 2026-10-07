@@ -139,6 +139,38 @@ The owner is Dana Lee with id 7f3a2c10 and the fact is 91be0d44.
 
 When you list several facts or entities, put the id pill next to **each** one. The label tells the reader which tool that id plugs into next; the value is the thing they copy. This is non-negotiable formatting — it's what turns "the agent said something" into "the user can act on it."
 
+## Durable file uploads and task records
+
+Discover the connected server's tools before choosing a transport; older servers
+may not expose the new import tool or task aliases.
+
+- A hosted chat file input: use `import_chatgpt_file(file=…)` when the host exposes
+  native file references through `openai/fileParams`. Pass the host-authorized
+  reference, never binary/base64 in model context. The server streams the bytes.
+- A local shell file: use `daiton upload PATH --idempotency-key KEY` with existing
+  Daiton authentication. It prepares, streams one PUT, verifies and finalizes.
+  Optional destination flags accept readable project/parent/about-entity UUIDs.
+- An existing Daiton file: use `get_file(file_id)` in this or a fresh session.
+
+Surface the returned `file_id`, `version`, `sha256`, and `private_link` as labeled,
+copyable IDs. Host file IDs and signed URLs are temporary references, not durable
+Daiton IDs. Signed URLs are bearer grants: fetch privately, never log or retain
+in context; request another grant with `get_file` after expiry.
+
+Retry local uploads with the same key and unchanged bytes/destinations. Retry
+native imports with the same host file ID and destinations. Completed retries
+return the immutable version; an expired incomplete initiation needs a new key,
+and an incomplete host transfer may need a refreshed native reference. Never
+reuse a key for changed content or ignore integrity errors. The limit is 500 MiB;
+multipart/resume is not supported. Associations do not grant sharing. Report
+permission denial; never create credentials or widen access without authorization.
+
+`create_task_record` (compatible `file_work_item`) creates a persistent Task
+record; it neither uploads files nor starts an agent. `list_task_records`
+(`list_backlog`) filters/paginates records, not full-text search or execution
+status. `launch_agent` starts execution; `list_agent_launches` lists active and
+historical sessions. Task lane updates do not start or stop agents.
+
 ## Quick reference
 
 | Goal | Tool(s) |

@@ -32,6 +32,10 @@ source_object_id + asserter_entity_id — only assert facts you have a genuine s
 never fabricate or placeholder a source. merge = same record within a layer; link = same
 real-world thing across layers; group = distinct things that belong together.
 
+FILES: when import_chatgpt_file is available, pass the host native file input; never
+put binary/base64 in context. Retain returned Daiton file_id/version, not signed URLs.
+Follow the core playbook for retries, destinations, permissions, and task-vs-agent tools.
+
 PRESENT: always surface ids to me as labeled, copyable pills, e.g. `entity_id` → `…`,
 `fact_id` → `…`. Never bury a raw id in prose.
 ```
